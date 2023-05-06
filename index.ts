@@ -132,7 +132,7 @@ interface Person {
   
   // ------>  Maps <---------
   
-  // if we want to use dynamic keys we have to use Record (build-in) type Record<key, value>
+  // if we want to use dynamic keys we have to use Record (build-in) Utility type Record<key, value>
   const ids: Record<number, string> = {
     10: 'a',
     20: 'b',
