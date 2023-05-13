@@ -18,6 +18,9 @@
   };
   //   console.log(merge({ name: 'Jack', id: '123', email: 'kashif@gmail.com' }, { email: 'zee@gmail.com' }));
   //   the problem with this approach is that we have to write the same code again and again for different types so to fix this we have utility types called "Partial<Type>"
+  //   Partial<Type> - this will make all the properties of the type optional
+  // Question: why we need Partial<Type> ?
+  // Answer: to make all the properties of the type optional
 
   type User = {
     name: string;
