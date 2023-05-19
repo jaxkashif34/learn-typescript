@@ -1,7 +1,7 @@
 // how we can create flexible interfaces and types in TypeScript using mapped types (means we can add as many keys as needed)
 // I found the two possible way to do that
 // one way is by using Record<key Type, value Type>
-// another way is by [key:key Type]: value Type in the interface or in Type
+// another way is by [key:key-Type]: value Type in the interface or in Type
 // type FlexibleDogInfo = {
 //   name: string;
 //   [key: string]: string;
