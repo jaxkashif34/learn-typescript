@@ -55,3 +55,5 @@ const ouput: GenericInterfaceForFunction<Obj> = (data: Obj) => {
 const ouput2: InterfaceForGenericFunction = <Obj>(data: Obj) => {
   return data;
 };
+
+export {}
