@@ -49,6 +49,14 @@ type A5 = OnlyString<ASimpleUnion>; // this will return only string because we a
 
 type ToArray<T> = T extends T ? Array<T> : never;
 
+// Adding this line later we have to pass a union in the generic parameters we shoul not do it like pass the type Object and then get the keys of that object in this way it will not work.
+
+// ******like this (will not triger distributive behaviour)****
+type C = { name: string; age: number }
+type A<T> = T extends T ? Array<keyof T> : never // here we are making union of keys of T generic
+type B = A<C>;
+// ******like this (will not triger distributive behaviour)****
+
 type A6 = ToArray<ASimpleUnion>; // 🎇😵 here it works
 
 // now let's make the our first example works
