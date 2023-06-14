@@ -5,11 +5,13 @@ type B = <T>(param: T) => T;
 // Question: can you tell me what is the return type of B ?
 // Answer: B is a function that takes a generic type as an argument and return that generic type
 
+// @ts-expect-error
 declare const a: A2; // Error: Generic type 'A' requires 1 type argument(s).
 declare const aNum: A2<number>;
 declare const aStr: A2<string>;
 
 declare const b: B;
+// @ts-expect-error
 declare const bIsNotGeneric: B<number>; // Error:Type 'B' is not generic.
 
 const numToNum: A2<number> = (x: number) => {
