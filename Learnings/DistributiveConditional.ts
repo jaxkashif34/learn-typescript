@@ -53,6 +53,7 @@ type ToArray<T> = T extends T ? Array<T> : never;
 
 // ******like this (will not triger distributive behaviour)****
 type C = { name: string; age: number }
+// @ts-expect-error
 type A<T> = T extends T ? Array<keyof T> : never // here we are making union of keys of T generic
 type B = A<C>;
 // ******like this (will not triger distributive behaviour)****
