@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Todo } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
 
-type SliceState = {
+export type SliceState = {
   todos: Todo[];
 };
 const initialState: SliceState = {
-  todos: [],
+  todos: [{ id: 1, text: 'hello', done: false }],
 };
 
 const slice = createSlice({
@@ -24,7 +25,7 @@ const slice = createSlice({
 
 export const useReduxTodo = () => {
   const dispatch = useDispatch();
-  const todos = useSelector((state: SliceState) => state.todos);
+  const { todos } = useSelector((state: RootState) => state.todos);
   const addTodo = (todo: Todo) => dispatch(slice.actions.addTodo(todo));
   const removeTodo = (id: number) => dispatch(slice.actions.removeTodo(id));
   return { todos, addTodo, removeTodo };
