@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, Dispatch, SetStateAction, useState } from 'react';
+import { FunctionComponent, ReactNode, useState } from 'react';
 import { Button } from '../components/HTML-Atteributes';
 type HeadingProps = { title: string };
 type BoxProps = { children: ReactNode };
