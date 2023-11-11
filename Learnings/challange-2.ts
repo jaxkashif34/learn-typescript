@@ -5,7 +5,7 @@ const myForEach = <T>(items: T[], forEachCallback: (v: T) => void): void => {
   }, undefined);
 };
 
-// myForEach([1, 2, 3], (v) => console.log(`forEach ${v}`));
+myForEach([1, 2, 3], (v) => console.log(`forEach ${v}`));
 
 const myFilter = <T>(items: T[], callback: (v: T) => boolean): T[] => {
   return items.reduce((acc, item: T) => {
@@ -16,7 +16,7 @@ const myFilter = <T>(items: T[], callback: (v: T) => boolean): T[] => {
   }, [] as T[]);
 };
 
-// console.log(myFilter([1, 2, 3, 4, 5], (v) => v % 2 === 0));
+myFilter([1, 2, 3, 4, 5], (v) => v % 2 === 0);
 
 const myMap = <T>(items: T[], callback: (v: T) => T): T[] => {
   return items.reduce((acc, item) => {
@@ -25,4 +25,6 @@ const myMap = <T>(items: T[], callback: (v: T) => T): T[] => {
   }, [] as T[]);
 };
 
-console.log(myMap([1, 2, 3, 4, 5], (v) => v * 10));
+myMap([1, 2, 3, 4, 5], (v) => v * 10);
+
+export {}

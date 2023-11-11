@@ -24,8 +24,6 @@ const makeCoordinate = (x: number, y: number, z: number): [number, number, numbe
 };
 
 const c1 = makeCoordinate(10, 20, 30);
-// c1[0] = 50; // Type 'readonly [number, number, number]' is not assignable to type '[number, number, number]'.
-// this way we make sure that only fixed number of elements are added to the array.
 
 //  how we make array read-only
 

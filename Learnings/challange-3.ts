@@ -98,3 +98,4 @@ uep.handleEvent('logout', {
 });
 
 console.log(uep.getProcessedEvents());
+export {}

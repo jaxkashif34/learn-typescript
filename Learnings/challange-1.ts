@@ -22,3 +22,4 @@ function findHouses(houses: string | House[], filter: (house: House) => boolean)
 
 console.log(findHouses(JSON.stringify(houses), ({ name }) => name === 'Atreides'));
 console.log(findHouses(houses, ({ name }) => name === 'Harkonnen'));
+export {}

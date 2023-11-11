@@ -1,85 +1,174 @@
-const myLogFunction = () => (str: string) => console.log(str);
+/* Again Learning the Mixins
+Detail Documentation on Mixins : https://www.digitalocean.com/community/tutorials/typescript-mixins#understanding-the-limitations-of-classes
+*/
 
-const logger = myLogFunction();
+// In TypeScript, we can’t inherit or extend from more than one class, but Mixins helps us to get around that. Mixins create partial classes that we can combine to form a single class that contains all the methods and properties from the partial classes.
 
-// logger('log function');
+// Understanding the Limitations of Classes
 
-function createLoggerClass() {
-  return class MyLoggerClass {
-    private completeLog: string = '';
-    log(str: string) {
-      console.log(str);
-      this.completeLog += str + '\n';
-    }
-    dumpLog() {
-      return this.completeLog;
-    }
-  };
+
+export class Car {
+  drive(name:string) {
+    console.log(`This ${name} can drive very fast`);
+  }
 }
 
-const MyLogger = createLoggerClass();
-
-const logger2 = new MyLogger();
-
-// logger2.log('hello world!');
-
-function CreateSimpleMemoryDatabase<T>() {
-  return class SimpleMemoryDatabase {
-    private db: Record<string, T> = {};
-    get(id: string) {
-      return this.db[id];
-    }
-    set(id: string, value: T) {
-      this.db[id] = value;
-    }
-    getObject(): object {
-      return this.db;
-    }
-  };
+export class Lorry {
+  carry(weight:number) {
+    console.log(`This vehicle can carry ${weight} kg`);
+  }
 }
 
-const StringDatabase = CreateSimpleMemoryDatabase<string>();
+// @ts-expect-error
+export class Truck extends Car, Lorry {}
 
-const sbd1 = new StringDatabase();
+// To solve this, we can use mixins.
 
-sbd1.set('foo', 'bar');
-type Constructor<T> = new (...args: any[]) => T;
-const DumpAble = <T extends Constructor<{ getObject(): object }>>(Base: T) => {
-  return class DumpAble extends Base {
-    dump() {
-      console.log(this.getObject());
-    }
-  };
+// Understanding Interface Class Extension and Declaration Merging
+
+
+// 1) Interface class extension
+
+// interface A extends ClassB, ClassC {}
+
+// When an interface extends a class, it extends only the class members but not their implementation because interfaces don’t contain implementations.
+
+// 2) Declaration merging
+
+// When two or more declarations are declared with the same name, TypeScript merges them into one.
+
+interface Alligator {
+  eyes: number;
+  nose: number;
+}
+
+interface Alligator {
+  tail: number;
+}
+
+const gator: Alligator = {
+  eyes: 2,
+  nose: 1,
+  tail: 1
 };
 
-const DumpAbleStringDatabase = DumpAble(StringDatabase);
-const sbd2 = new DumpAbleStringDatabase();
-sbd2.set('a', 'hello');
 
-class Engine {
-  start() {
-    console.log('Engine is running');
-  }
-  stopped() {
-    console.log('Engine is stopped');
-  }
+// Using the Helper Function
+
+// By leveraging these two functionalities in TypeScript, we can create an interface with the same name as Truck and extend both the Car and Lorry classes:
+
+
+// @ts-expect-error
+export class Truck {}
+export interface Truck extends Car, Lorry {}
+
+
+/* 
+Due to declaration merging, the Truck class will be merged with the Truck interface. This means that the Truck class will now contain the function definitions from both Car and Lorry classes.
+
+To enable the Truck class to implement the functions inherited from Car and Lorry, we’ll use a helper function found in the TypeScript docs.
+
+The function takes the name of the class to which we want to copy the implementations as the first argument (which in our case is Truck) and takes an array of classes from which we want to copy the implementations as the second argument (which in our case is Car and Lorry).
+*/
+
+
+// the helper function
+function applyMixins(derivedCtor: any, constructors: any[]) {
+  constructors.forEach((baseCtor) => {
+    Object.getOwnPropertyNames(baseCtor.prototype).forEach((name) => {
+      Object.defineProperty(
+        derivedCtor.prototype,
+        name,
+        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
+          Object.create(null)
+      );
+    });
+  });
 }
 
-class Lorry {
-  carry(weight: number) {
-    console.log(`This Vehicle can carry ${weight} key`);
-  }
-}
-// if we use interface we can extends multiple classes at a time but with class we can't extends multiple classes at once and if we create a class with the same name then we can achieved the same functionality like mixins (right now i'm new so i think that we can do that. but I might be wrong) we can do that and the full implementation is on official typescript mixins page
-interface Truck extends Engine, Lorry {}
-class Truck {
-  //   constructor(){
-  //       this. // uncomment and hit ctrl+space you will see all the methods of Engine and Lorry class
-  //   }
-}
+/* 
+And here’s how it’s used:
+*/ 
+
+applyMixins(Truck, [Car, Lorry]);
+
+/* We can now access the methods in Car and Lorry from a truck object.*/
 
 const truck = new Truck();
-// truck.carry(100); will not work
-// truck.start(); will not work
-// truck.stopped(); will not work
+truck.drive("truck");
+truck.carry(10);
 
+/* 
+Output
+This truck can drive very fast
+This vehicle can carry 10 kg
+*/ 
+
+
+(()=>{
+  // clean code of mixins how we can inherit from multiple classes
+class Car {
+  drive(v: string) { console.log(v) }
+}
+class Larry {
+  pop(v: number) { console.log(v) }
+}
+class Truck { }
+interface Truck extends Car, Larry { }
+
+function applyMixins(derivedCtor: any, constructors: any[]) {
+  constructors.forEach((baseCtor) => {
+    Object.getOwnPropertyNames(baseCtor.prototype).forEach((name) => {
+      Object.defineProperty(
+        derivedCtor.prototype,
+        name,
+        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
+          Object.create(null)
+      );
+    });
+  });
+}
+
+applyMixins(Truck, [Car, Larry])
+
+const truck = new Truck()
+
+
+truck.drive("horn")
+truck.pop(12) 
+
+})()
+
+// Mixins are a way to add functionality to a class by combining it with other classes. They are useful when you want to add functionality to a class without having to modify its original implementation.
+
+// In TypeScript, mixins can be implemented using a combination of class inheritance and function composition. The basic idea is to create a function that takes a base class and returns a new class that extends the base class and adds the desired functionality.
+
+// Here's an example of how you can implement mixins in TypeScript:
+
+// Define a base class
+class Base {
+  constructor(public x: number, public y: number) {}
+}
+
+// Define a mixin function that adds a `log` method to a class
+function Loggable<T extends new (...args: any[]) => Base>(BaseClass: T) {
+  // The constraint T extends new (...args: any[]) => Base is a type constraint that ensures that the Loggable function can only be applied to classes that have a constructor that takes any number of arguments and returns an instance of the Base class.
+  return class extends BaseClass {
+    log() {
+      console.log(`x: ${this.x}, y: ${this.y}`);
+    }
+  };
+}
+
+// Create a new class that extends the base class and adds the `log` method using the `Loggable` mixin
+const LoggableBase = Loggable(Base);
+const obj = new LoggableBase(1, 2);
+obj.log(); // Output: "x: 1, y: 2"
+
+// In this example, we define a base class Base with two properties x and y. We then define a mixin function Loggable that takes a base class and returns a new class that extends the base class and adds a log method that logs the values of x and y.
+
+// We then create a new class LoggableBase that extends the Base class and adds the log method using the Loggable mixin. We create an instance of LoggableBase and call the log method to log the values of x and y.
+
+// Mixins are useful when you want to add functionality to a class without having to modify its original implementation. They allow you to create reusable pieces of code that can be combined with other classes to add functionality.
+
+// In TypeScript, mixins can be implemented using a combination of class inheritance and function composition. The basic idea is to create a function that takes a base class and returns a new class that extends the base class and adds the desired functionality.

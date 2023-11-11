@@ -1,20 +1,10 @@
 type Point = { x: number; y: number };
 type P = keyof Point; //    ^ = type P = "x" | "y"
-type P1 = keyof Point[]; // ^ = type P = "length" | "toString" | "pop" | "push" | "concat" | ...
-type P2 = keyof { [x: string]: Point }; // ^ = type P = string
-// Question: why type P is string ?
-// Answer: because the key of { [x: string]: Point } is string
-// Question: If { [x: string]:Point } what will be the type if this was the case ?
-// Answer: type P = number
-// Question: why type P is number ?
-// Answer: because the key of { [x: number]: Point } is number
+type P1 = keyof Point[]; // ^ = type P1 = "length" | "toString" | "pop" | "push" | "concat" | ...
+type P2 = keyof { [x: string]: Point }; // ^ = type P2 = string | number
+// there is bug in type P2 we only said that the type of future keys should be string but the actual result is both string and number that's not what we want so to restrict this we have to use In-built Record<> type
+type P2WithoutBug = keyof Record<string, Point>; // ^ = type P2WithoutBug = string
 
 type Arrayish = { [n: number]: unknown };
 type A = keyof Arrayish;
-
-type Mapish = { [k: string]: boolean };
-type M = keyof Mapish; //
-// Question: is M type a string or number or union of both ?
-// Answer: M type is a string
-// Question: why M type is a string ?
-// Answer: because the key of { [k: string]: boolean } is string
+export {};

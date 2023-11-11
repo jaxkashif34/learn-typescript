@@ -1,3 +1,4 @@
+export {}
 abstract class StreetFighter {
   constructor() {}
 
@@ -6,11 +7,11 @@ abstract class StreetFighter {
     console.log(`${this.name()} attack with ${this.getSpecialAttack()}`);
   }
 
-  abstract getSpecialAttack(): string; // abstract methods or variables are those whose implementation are defined in those subclasses whose are extended from that class which have abstract methods and if we make a class abstracted then we can't initiate it using new keyword 
+  abstract getSpecialAttack(): string; // abstract methods or variables are those whose implementation are defined in those subclasses whose are extended from that abstract class which have abstract methods and if we make a class abstracted then we can't initiate it using new keyword 
   abstract name(): string;
 }
 
-class Ryu extends StreetFighter {
+class Ryu extends StreetFighter { // if we will not implement these methods ts will give an error
   getSpecialAttack(): string {
     return 'Hadoken';
   }

@@ -15,12 +15,12 @@ type PropMap = {
   age: number;
 };
 
-type PropType<Keys extends keyof PropMap = keyof PropMap> = {
-  [PropName in Keys]: Prop<PropMap[PropName]>;
-}[Keys];
+type PropType<K extends keyof PropMap = keyof PropMap> = {
+  [P in K]: Prop<PropMap[P]>;
+}[K];
 
 type Props = {
-  [Prop in keyof PropMap]: PropType<Prop>;
+  [P in keyof PropMap]: PropType<P>;
 };
 
 const props: Props = {

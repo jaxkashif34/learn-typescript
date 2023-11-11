@@ -2,11 +2,15 @@
 // I found the two possible way to do that
 // one way is by using Record<key Type, value Type>
 // another way is by [key:key-Type]: value Type in the interface or in Type
-// type FlexibleDogInfo = {
-//   name: string;
-//   [key: string]: string;
-// };
+type FlexibleDogInfo1 = {
+  // but here is a catch in this method and that is even though we are not tell that keys type might be number but when we get the type of keys it will also add number type... as we can see the in this example we are telling that keys type must be number but ts will also number key type
+  [key: string]: string;
+};
+
+type TypeOFFlexibleDogInfo1 = keyof FlexibleDogInfo1; // string | number
+
 type FlexibleDogInfo = {
+  // good way to add dynamic keys
   name: string;
 } & Record<string, string>;
 
@@ -32,14 +36,16 @@ type DogInfoOptions = OptionsFlags<DogInfo>;
 
 type Listeners<Type> = {
   [property in keyof Type as `on${Capitalize<string & property>}Change`]: (newValue: Type[property]) => void;
-  //   Question: why we need to add string & property string with property with & operator ?
-  //   Answer: because property is a generic type and we need to convert it into string type
-  //   Question: don't we already convert it by template literals ?
-  //   Answer: no, template literals convert the value of property into string type but not the type of property
-  //   Question: mean if we add string with & operator will it convert it's type into string ?
-  //   Answer: yes, it will convert it's type into string
-} & { [property in keyof Type as `on${Capitalize<string & property>}Delete`]?: () => void };
+  // Question Why we are doing this <string & property> adding string with property ?
+  //   In terms of the explanation, the error is occurring because TypeScript is inferring the type of the property variable to be keyof Type, which is a union of string, number, and symbol keys.
+
+  // When we try to use this variable as a key in the resulting object type, TypeScript expects the key to be a string, but it is not guaranteed to be a string because it could also be a number or symbol.
+
+  // By adding the extends string constraint to the property variable, we are ensuring that it is always a string, which allows us to use it as a key in the resulting object type without any errors.
+} & { [property in keyof Type as `on${Capitalize<string & property>}Delete`]: () => void };
+
 const listenToObject = <T>(obj: T, listeners: Listeners<T>): void => {
+  // so even though we are not passing a generic type when calling listenToObject function but ts will automatically infer the type of T and the type of T will be DogInfo object
   throw 'need to be implemented';
 };
 
