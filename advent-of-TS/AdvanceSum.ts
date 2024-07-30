@@ -49,7 +49,7 @@ type OfLength<T extends number, A extends any[] = []> = A extends {
   we are also checking that if that length value matches the provided number*/;
 }
   ? A // returning the array of provided number length
-  : OfLength<T, [...A, any]>;
+  : OfLength<T, [...A, any]>; // we are incrementing the array length by 1 and calling the function again
 
 // now we need to spread each of the array into final-sum-array and simply return the length of that array
 // in order to get the length of an array we also need to create another type that return the length of an final-add-array

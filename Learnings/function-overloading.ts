@@ -13,7 +13,9 @@ function f1(args?: string) {
 
 function maybe<T>(fnOrP: () => T): T | undefined;
 function maybe<T>(fnOrP: Promise<T>): Promise<undefined | T>;
-function maybe<T>(fnOrP: (() => T) | Promise<T>): T | undefined | Promise<undefined | T> {
+function maybe<T>(
+  fnOrP: (() => T) | Promise<T>
+): T | undefined | Promise<undefined | T> {
   if (typeof fnOrP === 'function') return fnOrP();
   return fnOrP.then((res) => res);
 }
@@ -32,13 +34,25 @@ type Widget = {
 
 const isString = (input: any): input is string => typeof input === 'string';
 const isDate = (input: any): input is Date => input instanceof Date;
-const isWidget = (w: any): w is Widget => isString(w.name) && ['Prod', 'Dev'].includes(w.env) && isDate(w.createdAt);
+const isWidget = (w: any): w is Widget =>
+  isString(w.name) && ['Prod', 'Dev'].includes(w.env) && isDate(w.createdAt);
 
 // function overloading
-function updateWidget(updateOrKey: Partial<Widget>, widgetOrValue: Widget): Widget;
-function updateWidget<K extends keyof Widget>(updateOrKey: K, widgetOrValue: Widget[K], widget: Widget): Widget;
+function updateWidget(
+  updateOrKey: Partial<Widget>,
+  widgetOrValue: Widget
+): Widget;
+function updateWidget<K extends keyof Widget>(
+  updateOrKey: K,
+  widgetOrValue: Widget[K],
+  widget: Widget
+): Widget;
 
-function updateWidget<K extends keyof Widget>(updateOrKey: Partial<Widget> | K, widgetOrValue: Widget | Widget[K], widget?: Widget): Widget {
+function updateWidget<K extends keyof Widget>(
+  updateOrKey: Partial<Widget> | K,
+  widgetOrValue: Widget | Widget[K],
+  widget?: Widget
+): Widget {
   if (isString(updateOrKey)) {
     if (!isWidget(widgetOrValue)) {
       if (isWidget(widget)) {
@@ -62,8 +76,15 @@ function updateWidget<K extends keyof Widget>(updateOrKey: Partial<Widget> | K, 
 }
 
 // const w1 = updateWidget('name', { name: 'widget', env: 'Dev', createdAt: new Date() });
-const w1 = updateWidget('createdAt', new Date(), { name: 'widget', env: 'Dev', createdAt: new Date() });
-const w2 = updateWidget({ name: 'something', createdAt: new Date(), env: 'Dev' }, { name: 'widget', env: 'Dev', createdAt: new Date() });
+const w1 = updateWidget('createdAt', new Date(), {
+  name: 'widget',
+  env: 'Dev',
+  createdAt: new Date(),
+});
+const w2 = updateWidget(
+  { name: 'something', createdAt: new Date(), env: 'Dev' },
+  { name: 'widget', env: 'Dev', createdAt: new Date() }
+);
 console.log(w2);
 
 // again learning function overloading in ts
